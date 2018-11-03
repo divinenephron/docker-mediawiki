@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mediawiki:
+    image: divinenephron/mediawiki:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./images:/var/www/html/images
+      - ./mediawiki_secrets.php:/external_includes/mediawiki_secrets.php
+  database:
+    image: mariadb
+    volumes:
+      - ./db:/var/lib/mysql
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    env_file:
+      - ./mysql_secrets
+  parsoid:
+    image: thenets/parsoid:0.9.0
+    ports:
+      - 8081:8000
+    environment:
+    - PARSOID_DOMAIN_mediawiki=http://mediawiki/api.php

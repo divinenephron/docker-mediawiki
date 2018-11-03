@@ -1,0 +1,5 @@
+mediawiki_secrets.php
+mysql_secrets
+db/*
+images/*
+mediawiki/*
